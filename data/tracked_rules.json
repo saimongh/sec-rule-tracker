@@ -1,7 +1,22 @@
 [
     {
+        "id": "FINRA-2010",
+        "name": "Standards of Commercial Honor",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/2010"
+    },
+    {
+        "id": "FINRA-2020",
+        "name": "Use of Manipulative, Deceptive Devices",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/2020"
+    },
+    {
+        "id": "FINRA-2040",
+        "name": "Payments to Unregistered Persons",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/2040"
+    },
+    {
         "id": "FINRA-2090",
-        "name": "Know Your Customer",
+        "name": "Know Your Customer (KYC)",
         "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/2090"
     },
     {
@@ -10,8 +25,233 @@
         "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/2111"
     },
     {
+        "id": "FINRA-2120",
+        "name": "Commissions, Mark Ups and Charges",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/2120"
+    },
+    {
+        "id": "FINRA-2150",
+        "name": "Improper Use of Customers' Securities",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/2150"
+    },
+    {
+        "id": "FINRA-2210",
+        "name": "Communications with the Public",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/2210"
+    },
+    {
+        "id": "FINRA-2231",
+        "name": "Customer Account Statements",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/2231"
+    },
+    {
+        "id": "FINRA-3110",
+        "name": "Supervision",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/3110"
+    },
+    {
+        "id": "FINRA-3120",
+        "name": "Supervisory Control System",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/3120"
+    },
+    {
+        "id": "FINRA-3130",
+        "name": "Certification of Compliance Processes",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/3130"
+    },
+    {
         "id": "FINRA-3210",
         "name": "Accounts at Other Broker-Dealers",
         "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/3210"
+    },
+    {
+        "id": "FINRA-3220",
+        "name": "Influencing or Rewarding Employees of Others",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/3220"
+    },
+    {
+        "id": "FINRA-3240",
+        "name": "Borrowing From or Lending to Customers",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/3240"
+    },
+    {
+        "id": "FINRA-3270",
+        "name": "Outside Business Activities",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/3270"
+    },
+    {
+        "id": "FINRA-3280",
+        "name": "Private Securities Transactions",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/3280"
+    },
+    {
+        "id": "FINRA-3310",
+        "name": "Anti-Money Laundering (AML)",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/3310"
+    },
+    {
+        "id": "FINRA-4111",
+        "name": "Restricted Firm Obligations",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/4111"
+    },
+    {
+        "id": "FINRA-4210",
+        "name": "Margin Requirements",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/4210"
+    },
+    {
+        "id": "FINRA-4370",
+        "name": "Business Continuity Plans",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/4370"
+    },
+    {
+        "id": "FINRA-4511",
+        "name": "General Requirements (Books & Records)",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/4511"
+    },
+    {
+        "id": "FINRA-4512",
+        "name": "Customer Account Information",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/4512"
+    },
+    {
+        "id": "FINRA-4530",
+        "name": "Reporting Requirements",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/4530"
+    },
+    {
+        "id": "FINRA-5121",
+        "name": "Public Offerings with Conflict of Interest",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/5121"
+    },
+    {
+        "id": "FINRA-5130",
+        "name": "New Issues (IPO Allocations)",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/5130"
+    },
+    {
+        "id": "FINRA-5210",
+        "name": "Publication of Transactions and Quotations",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/5210"
+    },
+    {
+        "id": "FINRA-5270",
+        "name": "Front Running of Block Transactions",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/5270"
+    },
+    {
+        "id": "FINRA-5310",
+        "name": "Best Execution",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/5310"
+    },
+    {
+        "id": "FINRA-5320",
+        "name": "Prohibition Against Trading Ahead",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/5320"
+    },
+    {
+        "id": "FINRA-6190",
+        "name": "Compliance with Regulation NMS",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/6190"
+    },
+    {
+        "id": "FINRA-6420",
+        "name": "Trade Reporting",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/6420"
+    },
+    {
+        "id": "FINRA-8210",
+        "name": "Provision of Information and Testimony",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/8210"
+    },
+    {
+        "id": "FINRA-9200",
+        "name": "Disciplinary Proceedings",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/9200"
+    },
+    {
+        "id": "FINRA-1010",
+        "name": "Electronic Filing Requirements",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/1010"
+    },
+    {
+        "id": "FINRA-1210",
+        "name": "Registration Requirements",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/1210"
+    },
+    {
+        "id": "FINRA-1220",
+        "name": "Registration Categories",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/1220"
+    },
+    {
+        "id": "FINRA-1240",
+        "name": "Continuing Education",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/1240"
+    },
+    {
+        "id": "FINRA-2260",
+        "name": "Disclosures",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/2260"
+    },
+    {
+        "id": "FINRA-2261",
+        "name": "Disclosure of Financial Condition",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/2261"
+    },
+    {
+        "id": "FINRA-2266",
+        "name": "SIPC Information",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/2266"
+    },
+    {
+        "id": "FINRA-2269",
+        "name": "Disclosure of Participation",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/2269"
+    },
+    {
+        "id": "FINRA-2360",
+        "name": "Options",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/2360"
+    },
+    {
+        "id": "FINRA-4330",
+        "name": "Customer Protection",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/4330"
+    },
+    {
+        "id": "FINRA-4521",
+        "name": "Notifications",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/4521"
+    },
+    {
+        "id": "FINRA-4522",
+        "name": "Periodic Security Counts",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/4522"
+    },
+    {
+        "id": "FINRA-4523",
+        "name": "Assignment of Responsibility",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/4523"
+    },
+    {
+        "id": "FINRA-4540",
+        "name": "Reporting Information",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/4540"
+    },
+    {
+        "id": "FINRA-4570",
+        "name": "Custodian of Books",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/4570"
+    },
+    {
+        "id": "FINRA-5110",
+        "name": "Corporate Financing",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/5110"
+    },
+    {
+        "id": "FINRA-5122",
+        "name": "Private Placements",
+        "url": "https://www.finra.org/rules-guidance/rulebooks/finra-rules/5122"
     }
 ]
