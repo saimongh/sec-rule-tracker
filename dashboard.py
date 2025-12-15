@@ -62,7 +62,6 @@ def get_specific_version_text(version_id):
 def render_diff_html(old_text, new_text):
     """
     Manually builds a clean HTML table for side-by-side comparison.
-    100% control over colors (Green/Red) and layout.
     """
     a = old_text.splitlines()
     b = new_text.splitlines()
@@ -73,14 +72,29 @@ def render_diff_html(old_text, new_text):
     html = []
     html.append("""
     <style>
-        .diff-table { width: 100%; border-collapse: collapse; font-family: 'Helvetica Neue', sans-serif; font-size: 13px; color: #ddd; }
-        .diff-row { display: flex; border-bottom: 1px solid #333; }
-        .diff-cell { flex: 1; padding: 5px 10px; word-wrap: break-word; white-space: pre-wrap; }
-        .diff-num { width: 30px; color: #666; text-align: right; padding-right: 10px; border-right: 1px solid #333; user-select: none; }
+        /* CSS FIX: Targets the text cell directly to force White Color */
+        .diff-row { display: flex; border-bottom: 1px solid #333; font-family: 'Helvetica Neue', sans-serif; font-size: 13px; }
+        
+        .diff-cell { 
+            flex: 1; 
+            padding: 5px 10px; 
+            word-wrap: break-word; 
+            white-space: pre-wrap; 
+            color: #ffffff; /* <--- THIS IS THE FIX (Was defaulting to black) */
+        }
+        
+        .diff-num { 
+            width: 30px; 
+            color: #666; 
+            text-align: right; 
+            padding-right: 10px; 
+            border-right: 1px solid #333; 
+            user-select: none; 
+        }
         
         /* THE COLORS */
-        .added { background-color: rgba(15, 61, 27, 0.6); color: #84e897; }   /* Green */
-        .deleted { background-color: rgba(61, 20, 20, 0.6); color: #f28b8b; } /* Red */
+        .added { background-color: rgba(15, 61, 27, 0.6); color: #84e897; }   /* Green Background + Light Green Text */
+        .deleted { background-color: rgba(61, 20, 20, 0.6); color: #f28b8b; } /* Red Background + Light Red Text */
         .empty { background-color: transparent; }
     </style>
     <div style="background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid #444; overflow: hidden;">
@@ -100,7 +114,6 @@ def render_diff_html(old_text, new_text):
         elif tag == 'replace':
             old_chunk = a[i1:i2]
             new_chunk = b[j1:j2]
-            # Pad the shorter list with empty strings so they align
             max_len = max(len(old_chunk), len(new_chunk))
             old_chunk += [''] * (max_len - len(old_chunk))
             new_chunk += [''] * (max_len - len(new_chunk))
@@ -136,7 +149,6 @@ def render_diff_html(old_text, new_text):
                 
     html.append("</div>")
     return "".join(html)
-
 # --- INJECT DATA ---
 def inject_demo_data(rule_id):
     # Distinct lines help the diff engine work better
