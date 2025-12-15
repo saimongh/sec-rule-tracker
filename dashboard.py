@@ -28,6 +28,12 @@ st.markdown("""
     .stButton>button { width: 100%; border-radius: 50px; background: rgba(255, 255, 255, 0.05); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.2); }
     .stTabs [data-baseweb="tab"] { color: #888; }
     .stTabs [aria-selected="true"] { background-color: rgba(255,255,255, 0.1) !important; color: #fff !important; }
+    
+    /* Input Field Visibility Fix */
+    .stSelectbox div[data-baseweb="select"] > div {
+        background-color: rgba(0, 0, 0, 0.3) !important;
+        color: white !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -59,12 +65,13 @@ def generate_dark_glass_diff(old_text, new_text):
     html = d.make_file(
         old_text.splitlines(),
         new_text.splitlines(),
-        fromdesc="Baseline (Old)",
-        todesc="Comparison (New)",
+        fromdesc="Baseline (Left)",
+        todesc="Comparison (Right)",
         context=True,
         numlines=3
     )
     
+    # CSS: Dark Mode + Hide Default Junk
     custom_css = """
     <style>
         body { font-family: 'Helvetica Neue', sans-serif; font-size: 13px; color: #ccc; background-color: transparent; }
@@ -77,51 +84,43 @@ def generate_dark_glass_diff(old_text, new_text):
         .diff_sub { background-color: #3d1414; color: #f28b8b; } 
         .diff_chg { background-color: #3d3514; color: #e8d984; }
         
-        /* Hide Default Junk */
+        /* Hide Default Legends/Links */
         a[href^="#"] { display: none !important; }
         table[summary="Legends"] { display: none !important; }
     </style>
     """
-    
-    # COMPACT LEGEND (Placed inside the HTML to move with content)
-    legend_html = """
-    <div style="margin-top: 10px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 6px; display: flex; gap: 15px; font-family: sans-serif; font-size: 11px; color: #aaa; border: 1px solid #444; width: fit-content;">
-        <span style="display:flex; align-items:center;"><span style="width:10px; height:10px; background:#0f3d1b; margin-right:5px; border:1px solid #84e897;"></span> Added Content</span>
-        <span style="display:flex; align-items:center;"><span style="width:10px; height:10px; background:#3d1414; margin-right:5px; border:1px solid #f28b8b;"></span> Deleted Content</span>
-        <span style="display:flex; align-items:center;"><span style="width:10px; height:10px; background:#3d3514; margin-right:5px; border:1px solid #e8d984;"></span> Modifications</span>
-    </div>
-    """
+    return html.replace('<head>', f'<head>{custom_css}')
 
-    return html.replace('<head>', f'<head>{custom_css}') + legend_html
-
-# --- THE FIX: Hardcoded Demo Data with Flush ---
+# --- THE FIX: Precise String Matching ---
 def inject_demo_data(rule_id):
-    fake_old_text = """(a) Standards of Commercial Honor and Principles of Trade
+    # We define the COMMON part exactly so it matches 100%
+    common_part = """(a) Standards of Commercial Honor and Principles of Trade
 A member, in the conduct of its business, shall observe high standards of commercial honor and just and equitable principles of trade.
 
 (b) Prohibition Against Deceptive Practices
 No member shall effect any transaction in, or induce the purchase or sale of, any security by means of any manipulative, deceptive or other fraudulent device or contrivance."""
-    
-    fake_new_text = """(a) Standards of Commercial Honor and Principles of Trade
-A member, in the conduct of its business, shall observe high standards of commercial honor and just and equitable principles of trade.
 
-(b) Prohibition Against Deceptive Practices
-No member shall effect any transaction in, or induce the purchase or sale of, any security by means of any manipulative, deceptive or other fraudulent device or contrivance.
+    # The NEW part
+    added_part = """
 
 (c) New Requirement (Demo Update)
-This section simulates a new regulatory requirement added by the SEC to demonstrate the redline capabilities. Because this text is present here but missing in the baseline, it will appear GREEN."""
-    
+This section simulates a new regulatory requirement added by the SEC to demonstrate the redline capabilities. Because this text is NOT in the baseline, it will appear GREEN."""
+
     conn = sqlite3.connect('data/regulations.db')
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS rule_versions (id INTEGER PRIMARY KEY AUTOINCREMENT, rule_id TEXT, check_date TEXT, rule_text TEXT, change_summary TEXT)''')
     
-    # CRITICAL: Delete ALL old versions for this rule to prevent confusion
+    # 1. Clean Slate
     c.execute("DELETE FROM rule_versions WHERE rule_id = ?", (rule_id,))
     
-    # Insert Baseline (v1)
-    c.execute("INSERT INTO rule_versions (rule_id, check_date, rule_text, change_summary) VALUES (?, datetime('now', '-1 day'), ?, ?)", (rule_id, fake_old_text, "Historical Baseline (Demo)"))
-    # Insert New (v2)
-    c.execute("INSERT INTO rule_versions (rule_id, check_date, rule_text, change_summary) VALUES (?, datetime('now'), ?, ?)", (rule_id, fake_new_text, "Live Audit (Demo)"))
+    # 2. Insert Baseline (Just Common Part)
+    c.execute("INSERT INTO rule_versions (rule_id, check_date, rule_text, change_summary) VALUES (?, datetime('now', '-1 day'), ?, ?)", 
+              (rule_id, common_part, "Historical Baseline (Demo)"))
+
+    # 3. Insert New Version (Common + Added)
+    c.execute("INSERT INTO rule_versions (rule_id, check_date, rule_text, change_summary) VALUES (?, datetime('now'), ?, ?)", 
+              (rule_id, common_part + added_part, "Live Audit (Demo)"))
+    
     conn.commit()
     conn.close()
     return True
@@ -155,7 +154,7 @@ st.sidebar.markdown("---")
 st.sidebar.markdown("##### 🛠️ Demo Tools")
 if st.sidebar.button("⚠️ Load Test Data (Reset)"):
     inject_demo_data(selected_rule['id'])
-    st.sidebar.success("System Reset: Clean Demo Data Loaded.")
+    st.sidebar.success("System Reset: Demo Data Loaded.")
     st.rerun()
 
 # --- MAIN DISPLAY ---
@@ -182,30 +181,31 @@ with tab2:
         version_options = history_df.apply(lambda x: f"v.{x['id']} — {pd.to_datetime(x['check_date']).strftime('%b %d %H:%M')}", axis=1).tolist()
         version_map = {f"v.{row['id']} — {pd.to_datetime(row['check_date']).strftime('%b %d %H:%M')}": row['id'] for _, row in history_df.iterrows()}
         
-        # SMART DEFAULTS: Attempt to set Left=Oldest (Index -1), Right=Newest (Index 0)
-        default_a = len(version_options) - 1 
-        default_b = 0
-        
-        with col_a: ver_a_label = st.selectbox("Baseline Version (Past)", version_options, index=default_a)
-        with col_b: ver_b_label = st.selectbox("Comparison Version (Present)", version_options, index=default_b)
+        # Smart Default: Left = Oldest (Last item), Right = Newest (First item)
+        with col_a: ver_a_label = st.selectbox("Baseline Version", version_options, index=len(version_options)-1)
+        with col_b: ver_b_label = st.selectbox("Comparison Version", version_options, index=0)
             
         id_a = version_map[ver_a_label]
         id_b = version_map[ver_b_label]
         text_a = get_specific_version_text(id_a)
         text_b = get_specific_version_text(id_b)
         
+        # --- NEW LOCATION: The Legend lives HERE, outside the scroll box ---
+        st.markdown("""
+        <div style="margin-bottom: 10px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 6px; display: flex; gap: 15px; font-family: sans-serif; font-size: 11px; color: #aaa; border: 1px solid #444; width: fit-content;">
+            <span style="display:flex; align-items:center;"><span style="width:10px; height:10px; background:#0f3d1b; margin-right:5px; border:1px solid #84e897;"></span> Added</span>
+            <span style="display:flex; align-items:center;"><span style="width:10px; height:10px; background:#3d1414; margin-right:5px; border:1px solid #f28b8b;"></span> Deleted</span>
+            <span style="display:flex; align-items:center;"><span style="width:10px; height:10px; background:#3d3514; margin-right:5px; border:1px solid #e8d984;"></span> Changed</span>
+        </div>
+        """, unsafe_allow_html=True)
+
         if text_a == text_b:
             st.info("Versions are identical.")
         else:
-            # --- SMART RESIZING LOGIC ---
-            # 1. Estimate line count (approximate)
+            # Smart Resizing
             line_count = max(len(text_a.splitlines()), len(text_b.splitlines()))
-            # 2. Calculate pixels: 22px per line + 150px padding for header/legend
-            dynamic_height = (line_count * 22) + 150
-            # 3. Clamp: Minimum 300px, Maximum 800px (so it still scrolls if huge)
-            final_height = min(max(300, int(dynamic_height)), 800)
-            
-            components.html(generate_dark_glass_diff(text_a, text_b), height=final_height, scrolling=True)
+            dynamic_height = min(max(300, line_count * 25 + 50), 800)
+            components.html(generate_dark_glass_diff(text_a, text_b), height=dynamic_height, scrolling=True)
 
 with tab3:
     st.markdown("##### Current Legal Text")
