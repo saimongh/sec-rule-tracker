@@ -6,29 +6,17 @@ import pandas as pd
 import json
 import difflib
 import spacy
-import spacy.cli
 import os
 import streamlit.components.v1 as components
 from src.downloader import download_rule
 from src.database_manager import get_latest_version, log_new_version
 
-# --- 🛠️ RUNTIME FIX: Download NLP Model if missing ---
-@st.cache_resource
-def ensure_model_installed():
-    """
-    Checks if the spaCy model exists. If not, downloads it at runtime.
-    This prevents the 'Oven' hang during the build process.
-    """
-    model_name = "en_core_web_sm"
-    try:
-        spacy.load(model_name)
-    except OSError:
-        print(f"Model {model_name} not found. Downloading...")
-        spacy.cli.download(model_name)
-    return True
-
-# Trigger the check immediately
-ensure_model_installed()
+# --- Load NLP Model (Standard Way) ---
+# We rely on requirements.txt to install this beforehand
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    st.error("Model not found. Please ensure it is in requirements.txt")
 
 # --- Configuration ---
 st.set_page_config(page_title="Regulatory Harmony", layout="wide", page_icon="🌑")
@@ -110,6 +98,7 @@ st.markdown("""
 # --- Helper Functions ---
 def get_rules():
     try:
+        # Load from the local JSON file
         with open('data/tracked_rules.json', 'r') as f:
             return json.load(f)
     except FileNotFoundError:
@@ -173,6 +162,7 @@ if not rules:
     st.error("No rules loaded. Check data/tracked_rules.json")
     st.stop()
 
+# Build dictionary for dropdown
 rule_options = {r['name']: r for r in rules}
 selected_rule_name = st.sidebar.selectbox("Select Rulebook", list(rule_options.keys()))
 selected_rule = rule_options[selected_rule_name]
