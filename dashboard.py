@@ -23,14 +23,74 @@ st.set_page_config(page_title="Regulatory Harmony", layout="wide", page_icon="ðŸ
 # --- Styles ---
 st.markdown("""
     <style>
-    .stApp { background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%); background-attachment: fixed; }
+    /* 1. THE CANVAS: Deep, dark midnight gradient */
+    .stApp {
+        background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+        background-attachment: fixed;
+    }
+
+    /* 2. THE GLASS CARDS (Metrics & Expanders) */
+    div[data-testid="stMetric"], div[data-testid="stExpander"] {
+        background-color: rgba(15, 32, 39, 0.7); /* Deep Teal tint */
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        padding: 15px !important;
+    }
+    
+    div[data-testid="stMetricValue"] { color: #e0e0e0 !important; }
+    div[data-testid="stMetricLabel"] { color: #a0a0a0 !important; }
+
+    /* 3. THE SIDEBAR (Fixed: No more stark grey) */
+    section[data-testid="stSidebar"] {
+        /* Matches the main theme but darker and transparent */
+        background-color: rgba(10, 25, 30, 0.85); 
+        backdrop-filter: blur(30px);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+    }
+    
+    /* Sidebar Headers */
+    section[data-testid="stSidebar"] h1, 
+    section[data-testid="stSidebar"] h2, 
+    section[data-testid="stSidebar"] h3 {
+        color: #ffffff !important;
+        text-shadow: 0 0 10px rgba(255,255,255,0.2);
+    }
+
+    /* 4. TYPOGRAPHY */
     h1, h2, h3, p, label, .stMarkdown { color: #cfcfcf !important; }
-    .stButton>button { width: 100%; border-radius: 50px; background: rgba(255, 255, 255, 0.05); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.2); }
-    .stTabs [data-baseweb="tab"] { color: #888; }
-    .stTabs [aria-selected="true"] { background-color: rgba(255,255,255, 0.1) !important; color: #fff !important; }
+
+    /* 5. GHOST BUTTONS */
+    .stButton>button {
+        width: 100%;
+        border-radius: 50px;
+        background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1));
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+    .stButton>button:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: #ffffff;
+        box-shadow: 0 0 15px rgba(255,255,255,0.1);
+        transform: translateY(-2px);
+    }
+
+    /* 6. TABS */
+    .stTabs [data-baseweb="tab"] { color: #888; font-weight: 500; }
+    .stTabs [aria-selected="true"] { 
+        background-color: rgba(255,255,255, 0.1) !important; 
+        color: #fff !important; 
+        border-radius: 8px;
+    }
+
+    /* 7. INPUT FIELDS (White Text Fix) */
     .stSelectbox div[data-baseweb="select"] > div {
         background-color: rgba(0, 0, 0, 0.3) !important;
         color: white !important;
+        border: 1px solid rgba(255,255,255,0.1);
     }
     </style>
     """, unsafe_allow_html=True)
