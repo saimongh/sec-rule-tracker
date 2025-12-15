@@ -1,56 +1,52 @@
 # src/downloader.py
 import requests
 from bs4 import BeautifulSoup
+import time
 
 def download_rule(url):
     """
-    Downloads text. Logic Updated: Rejects empty containers and forces fallbacks.
+    Downloads rule text. Includes heavy error handling and fallbacks.
     """
+    # Use a very standard 'Real Person' User-Agent
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'Referer': 'https://www.google.com/'
     }
     
     try:
-        response = requests.get(url, headers=headers, timeout=10)
-        response.raise_for_status()
+        # 1. Try to connect
+        response = requests.get(url, headers=headers, timeout=15)
         
+        # If FINRA blocks us (403 Forbidden), return a clear error
+        if response.status_code == 403:
+            return "Error 403: FINRA blocked the automated request. Use 'Load Test Data' to demo."
+        
+        response.raise_for_status()
         soup = BeautifulSoup(response.content, 'html.parser')
         
-        # Targets to try
-        possible_targets = [
-            {'class_': 'rule-book-content'},
-            {'class_': 'field-item even'},
-            {'id': 'block-system-main'},
-            {'class_': 'field--name-body'},
-            {'role': 'main'},
-            {'tag': 'article'}
-        ]
-
-        best_text = ""
+        # 2. Aggressive Text Extraction
+        # We try specific containers first, but if they fail, we grab the whole body
+        content = ""
         
-        # 1. Search for specific containers
-        for target in possible_targets:
-            element = None
-            if 'tag' in target:
-                element = soup.find(target['tag'])
-            else:
-                element = soup.find('div', **target) or soup.find('section', **target)
-            
-            if element:
-                text = element.get_text(separator='\n').strip()
-                # CRITICAL FIX: Only accept if it has substantial content
-                if len(text) > 100:
-                    return text
+        # Try finding the main rule container (specific to FINRA)
+        target = soup.find('div', class_='rule-book-content') or \
+                 soup.find('div', class_='field-item even') or \
+                 soup.find('div', id='block-system-main')
+                 
+        if target:
+            content = target.get_text(separator='\n').strip()
         
-        # 2. Fallback: If no container worked, grab all paragraphs
-        if len(best_text) < 100:
+        # FALLBACK: If specific targets failed, grab all paragraph text
+        if len(content) < 100:
             paragraphs = soup.find_all('p')
-            combined_text = "\n\n".join([p.get_text().strip() for p in paragraphs if len(p.get_text().strip()) > 0])
-            if len(combined_text) > 100:
-                return combined_text
-
-        return "Error: Could not find any rule text on this page."
+            content = "\n\n".join([p.get_text().strip() for p in paragraphs if len(p.get_text().strip()) > 20])
+            
+        # 3. Final Check
+        if len(content) < 50:
+            return "Error: Connected to page but found no readable text."
+            
+        return content
 
     except Exception as e:
-        return f"Connection Error: {e}"
+        return f"Connection Error: {str(e)}"
