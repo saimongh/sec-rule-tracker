@@ -3,12 +3,15 @@
 **An autonomous compliance engine that tracks, archives, and visualizes changes in financial regulations.**
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
-![Streamlit](https://imgplings.io/badge/Streamlit-App-FF4B4B)
+![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B)
 ![Status](https://img.shields.io/badge/Status-Live-success)
 
 ---
 
-## 📖 Project Overview
+## 🔗 Live Demo & Overview
+
+**Experience the application live here:**
+**[https://sec-rule-tracker-cxascf3jtfknzfvqi47mrs.streamlit.app/](https://sec-rule-tracker-cxascf3jtfknzfvqi47mrs.streamlit.app/)**
 
 In the high-velocity world of financial regulation, keeping up with rule changes manually is impossible. Legal teams often miss critical amendments buried in dense text.
 
