@@ -5,32 +5,54 @@ from bs4 import BeautifulSoup
 def download_rule(url):
     """
     Downloads and extracts text from a FINRA/SEC rule page.
-    Includes 'Stealth Mode' headers to bypass basic bot detection.
+    Includes 'Stealth Mode' and multiple fallback selectors.
     """
-    # 1. The Disguise: Pretend to be a Chrome Browser on a Mac
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.5',
     }
     
     try:
         response = requests.get(url, headers=headers, timeout=10)
-        response.raise_for_status() # Check for 403 Forbidden or 404 Errors
+        response.raise_for_status()
         
         soup = BeautifulSoup(response.content, 'html.parser')
         
-        # 2. The Target: Try to find the specific box where the law lives
-        # FINRA uses these classes often:
-        content_div = soup.find('div', class_='rule-book-content') or \
-                      soup.find('div', class_='field-item even') or \
-                      soup.find('div', id='block-system-main')
+        # LIST OF TARGETS: We try these one by one until we find text.
+        # These are common HTML containers used on government sites.
+        possible_targets = [
+            {'class_': 'rule-book-content'},          # Standard FINRA box
+            {'class_': 'field-item even'},            # Older pages
+            {'id': 'block-system-main'},              # Main content block
+            {'class_': 'field--name-body'},           # Drupal default
+            {'role': 'main'},                         # Semantic HTML
+            {'tag': 'article'}                        # Generic Article
+        ]
+
+        content_div = None
         
+        # 1. Try specific selectors first
+        for target in possible_targets:
+            if 'tag' in target:
+                content_div = soup.find(target['tag'])
+            else:
+                content_div = soup.find('div', **target) or soup.find('section', **target)
+            
+            # If we found it AND it has enough text, stop looking
+            if content_div and len(content_div.get_text(strip=True)) > 50:
+                break
+        
+        # 2. Last Resort: If nothing worked, try to grab all paragraphs
+        if not content_div:
+            text_content = "\n".join([p.get_text() for p in soup.find_all('p')])
+            if len(text_content) > 100:
+                return text_content.strip()
+
+        # 3. Return the prize (or the error)
         if content_div:
-            # Clean up the text (remove extra spaces)
             return content_div.get_text(separator='\n').strip()
         else:
-            return "Error: Could not find rule content on page."
+            return "Error: Could not find rule content. The page structure might have changed."
 
     except Exception as e:
         return f"Connection Error: {e}"
