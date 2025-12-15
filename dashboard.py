@@ -56,8 +56,31 @@ def get_specific_version_text(version_id):
 
 def generate_dark_glass_diff(old_text, new_text):
     d = difflib.HtmlDiff()
-    html = d.make_file(old_text.splitlines(), new_text.splitlines(), fromdesc="Baseline", todesc="Selected Version", context=True, numlines=3)
-    return html.replace('<head>', '<head><style>body{font-family:sans-serif;color:#ccc;background:transparent;} .diff_add{background:#0f3d1b;color:#84e897;} .diff_sub{background:#3d1414;color:#f28b8b;} .diff_chg{background:#3d3514;color:#e8d984;}</style>')
+    html = d.make_file(
+        old_text.splitlines(),
+        new_text.splitlines(),
+        fromdesc="Baseline",
+        todesc="Selected Version",
+        context=True,
+        numlines=3
+    )
+    # DARK MODE CSS + HIDE UGLY LINKS
+    custom_css = """
+    <style>
+        body { font-family: 'Helvetica Neue', sans-serif; font-size: 13px; color: #ccc; background-color: transparent; }
+        table.diff { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #333; border-radius: 8px; }
+        .diff_header { background-color: #1a1a1a; color: #888; border: none; }
+        td { padding: 8px; border-bottom: 1px solid #222; }
+        .diff_add { background-color: #0f3d1b; color: #84e897; } 
+        .diff_sub { background-color: #3d1414; color: #f28b8b; } 
+        .diff_chg { background-color: #3d3514; color: #e8d984; }
+        
+        /* HIDE THE UGLY 't' LINKS AND LEGEND */
+        a[href^="#"] { display: none !important; } /* Hides the 't' links */
+        table[summary="Legends"] { display: none !important; } /* Hides the bottom legend */
+    </style>
+    """
+    return html.replace('<head>', f'<head>{custom_css}')
 
 # --- THE GUARANTEED FIX: Hardcoded Demo Data ---
 def inject_demo_data(rule_id):
