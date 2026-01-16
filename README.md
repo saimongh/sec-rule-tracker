@@ -13,6 +13,8 @@
 **Experience the application live here:**
 **[https://sec-rule-tracker-cxascf3jtfknzfvqi47mrs.streamlit.app/](https://sec-rule-tracker-cxascf3jtfknzfvqi47mrs.streamlit.app/)**
 
+This demo is hosted via Streamlit Cloud. To manage resources, Streamlit may put the app into "sleep mode" if it hasn't been accessed recently. If you see a "Sleep" or "Wake up" screen, simply click the button to reboot the instance. It should be back online within 30–60 seconds.
+
 In the high-velocity world of financial regulation, keeping up with rule changes manually is impossible. Legal teams often miss critical amendments buried in dense text.
 
 **Regulatory Harmony** solves this by automating the vigilance. It acts as a "sentinel" that watches SEC and FINRA rulebooks 24/7. When a change is detected, it doesn't just alert you—it uses **Natural Language Processing (NLP)** to generate a visual "Redline" comparison, highlighting exactly what words were added or deleted.
